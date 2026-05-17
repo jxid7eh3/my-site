@@ -17,7 +17,8 @@ class handler(BaseHTTPRequestHandler):
                 * { box-sizing: border-box; margin: 0; padding: 0; }
                 
                 body {
-                    background: url('https://pinimg.com') no-repeat center center fixed;
+                    /* 형이 보내준 붉은 달 고화질 이미지 CDN 원본으로 긴급 교체 */
+                    background: url('https://unsplash.com') no-repeat center center fixed;
                     background-size: cover;
                     color: #ffffff;
                     font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -33,11 +34,12 @@ class handler(BaseHTTPRequestHandler):
                     content: '';
                     position: absolute;
                     top: 0; left: 0; width: 100%; height: 100%;
-                    background: rgba(0, 0, 0, 0.45);
+                    /* 배경 무드가 살도록 투명도 조절 */
+                    background: rgba(0, 0, 0, 0.5);
                     z-index: 1;
                 }
 
-                /* 첫 진입 클릭 오버레이 */
+                /* 첫 진입 Click Here 팝업 */
                 .enter-overlay {
                     position: fixed;
                     top: 0; left: 0; width: 100%; height: 100%;
@@ -72,29 +74,32 @@ class handler(BaseHTTPRequestHandler):
 
                 /* 프로필 카드 디자인 */
                 .profile-card {
-                    background: rgba(20, 20, 28, 0.75);
-                    backdrop-filter: blur(16px);
-                    -webkit-backdrop-filter: blur(16px);
-                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    background: rgba(20, 20, 28, 0.85);
+                    backdrop-filter: blur(20px);
+                    -webkit-backdrop-filter: blur(20px);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
                     border-radius: 16px;
                     width: 90%;
                     max-width: 380px;
                     overflow: hidden;
-                    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+                    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
                     z-index: 2;
                     position: relative;
                 }
 
+                /* 🚨 디스코드 배너 영역을 y.eun 테마 붉은 달 미니 버전으로 매칭 */
                 .discord-banner {
                     width: 100%;
-                    height: 105px;
-                    background: linear-gradient(135deg, #7289da, #1a1a24);
+                    height: 115px;
+                    background: url('https://unsplash.com') no-repeat center center;
+                    background-size: cover;
                     position: relative;
                 }
 
+                /* 프로필 아바타를 y.eun 네온 레드/그린 크로스 엠블럼으로 세팅 */
                 .avatar-container {
                     position: absolute;
-                    top: 60px;
+                    top: 65px;
                     left: 22px;
                     width: 86px;
                     height: 86px;
@@ -109,35 +114,36 @@ class handler(BaseHTTPRequestHandler):
                     width: 76px;
                     height: 76px;
                     border-radius: 50%;
-                    background: radial-gradient(circle, #00ff66 0%, #111 100%);
-                    box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
+                    background: radial-gradient(circle, #ff3344 0%, #111 100%);
+                    box-shadow: 0 0 15px rgba(255, 51, 68, 0.5);
                 }
 
                 .card-body {
-                    padding: 55px 22px 25px 22px;
+                    padding: 45px 22px 25px 22px;
                 }
 
                 .username {
                     font-size: 1.6rem;
                     font-weight: 700;
                     color: #ffffff;
-                    margin-bottom: 4px;
+                    margin-bottom: 2px;
                 }
 
                 .tag {
                     font-size: 0.9rem;
-                    color: #b5bac1;
-                    margin-bottom: 15px;
+                    color: #ff5566;
+                    font-weight: bold;
+                    margin-bottom: 12px;
+                    text-shadow: 0 0 8px rgba(255, 85, 102, 0.3);
                 }
 
-                /* 디코 고유 닉네임 박스 하이라이트 */
                 .discord-nick-box {
                     font-size: 0.85rem;
-                    background: rgba(114, 137, 218, 0.15);
-                    border: 1px solid rgba(114, 137, 218, 0.3);
+                    background: rgba(255, 51, 68, 0.1);
+                    border: 1px solid rgba(255, 51, 68, 0.25);
                     padding: 6px 12px;
                     border-radius: 6px;
-                    color: #94a6ff;
+                    color: #ff6677;
                     font-weight: bold;
                     display: inline-block;
                     margin-bottom: 5px;
@@ -192,11 +198,11 @@ class handler(BaseHTTPRequestHandler):
                 }
 
                 .link-btn:hover {
-                    background: rgba(0, 255, 102, 0.12);
-                    border-color: #00ff66;
-                    color: #00ff66;
+                    background: rgba(255, 51, 68, 0.15);
+                    border-color: #ff3344;
+                    color: #ff3344;
                     transform: translateY(-2px);
-                    box-shadow: 0 5px 15px rgba(0, 255, 102, 0.15);
+                    box-shadow: 0 5px 15px rgba(255, 51, 68, 0.2);
                 }
 
                 .music-status {
@@ -210,12 +216,13 @@ class handler(BaseHTTPRequestHandler):
         </head>
         <body>
 
-            <!-- 첫 진입 클릭 오버레이 -->
+            <!-- 입장 제어 패널 (BGM 브라우저 보안 우회용) -->
             <div class="enter-overlay" id="overlay" onclick="startSite()">
                 <div class="enter-btn">[ Click Here ]</div>
             </div>
 
             <div class="profile-card">
+                <!-- 붉은 달 연동 배너 -->
                 <div class="discord-banner">
                     <div class="avatar-container">
                         <div class="avatar-circle"></div>
@@ -223,11 +230,11 @@ class handler(BaseHTTPRequestHandler):
                 </div>
                 
                 <div class="card-body">
-                    <div class="username">mingyeol_prime</div>
-                    <div class="tag">@mingyeol_prime</div>
+                    <!-- 유저 정보 영역 y.eun 풀 세팅 -->
+                    <div class="username">y.eun</div>
+                    <div class="tag">@y.eun</div>
                     
-                    <!-- 요청하신 디코 닉네임 레이블 탑재 -->
-                    <div class="discord-nick-box">🆔 Discord ID: y.eun</div>
+                    <div class="discord-nick-box">🎯 Main Profile: y.eun</div>
                     
                     <div class="divider"></div>
 
@@ -253,7 +260,7 @@ class handler(BaseHTTPRequestHandler):
                         🎧 BGM: DAY6 - 한 페이지가 될 수 있게
                     </div>
                     
-                    <!-- 🚨 아이폰/PC에서 무조건 뚫리는 대형 공영 방송 오디오 스트리밍 주소로 전면 교체 -->
+                    <!-- 🚨 전 세계 공용 인터넷 아카이브 서버 우회용 순수 고정 오디오 스트리밍 주소 탑재 -->
                     <audio id="bgm" loop preload="auto">
                         <source src="https://archive.org" type="audio/mpeg">
                     </audio>
@@ -267,13 +274,12 @@ class handler(BaseHTTPRequestHandler):
                     
                     overlay.classList.add('fade-out');
                     
-                    // 오디오 볼륨 확보 후 리로드 재생 실행
-                    audio.volume = 0.8;
+                    // 강제 재생 메커니즘 가동
+                    audio.volume = 0.7;
                     audio.play().then(function() {
-                        console.log("BGM 재생 성공");
+                        console.log("DAY6 브금 스트리밍 성공");
                     }).catch(function(error) {
-                        console.log("재생 거부 오류 우회 시도:", error);
-                        // 실패시 강제 트랙 리로드 후 재호출
+                        console.log("인증 실패 우회 재시도");
                         audio.load();
                         audio.play();
                     });
