@@ -1,57 +1,37 @@
 from http.server import BaseHTTPRequestHandler
 import urllib.request
+import re
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        # 1. 200 정상 연결 헤더 및 인코딩 세팅
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html; charset=utf-8')
-        self.end_headers()
+        # 1. 오리지널 guns.lol 가상 브라우저 헤더 설정 (우회 핵심)
+        url = "https://guns.lol"
+        req = urllib.request.Request(
+            url, 
+            headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36'}
+        )
         
-        # 2. guns.lol 서비스 자체를 통째로 긁어와서 내 도메인 화면에 복제하는 전체 레이아웃 코드
-        html_content = """
-        <!DOCTYPE html>
-        <html lang="ko">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-            <!-- 주소창에는 dev-hub.kr이 뜨지만 타이틀은 형의 공식 타이틀로 연동 -->
-            <title>dev-hub.kr | mingyeol_prime</title>
-            <style>
-                * { box-sizing: border-box; margin: 0; padding: 0; }
-                
-                html, body {
-                    width: 100%;
-                    height: 100%;
-                    overflow: hidden;
-                    background-color: #000000;
-                }
-
-                /* guns.lol 서비스 오리지널 시스템 전체를 왜곡 없이 풀 화면으로 가져오는 프레임 */
-                .guns-service-frame {
-                    width: 100%;
-                    height: 100%;
-                    border: none;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    z-index: 100;
-                }
-            </style>
-        </head>
-        <body>
-
-            <!-- 🚨 형의 오리지널 guns.lol 주소를 기반으로 서비스 자체를 완벽하게 연동 🚨 -->
-            <iframe 
-                src="https://guns.lol" 
-                class="guns-service-frame" 
-                allow="autoplay; encrypted-media; clipboard-write; microphone; camera"
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms">
-            </iframe>
-
-        </body>
-        </html>
-        """
-        
-        self.wfile.write(html_content.encode('utf-8'))
+        try:
+            # 2. guns.lol 서비스 자체 소스코드를 백엔드에서 통째로 다운로드
+            with urllib.request.urlopen(req) as response:
+                guns_html = response.read().decode('utf-8')
+            
+            # 3. guns.lol 소스코드 내부에 박힌 주소 경로들을 내 사이트와 호환되도록 자동 파싱 매핑
+            guns_html = guns_html.replace('href="/', 'href="https://guns.lol')
+            guns_html = guns_html.replace('src="/', 'src="https://guns.lol')
+            
+            # 4. 브라우저 보안 잠금 헤더를 무력화하고 출력 데이터 전송
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html; charset=utf-8')
+            # 기존 X-Frame 차단 헤더를 보내지 않아 브라우저 락을 완벽 우회
+            self.end_headers()
+            
+            self.wfile.write(guns_html.encode('utf-8'))
+            
+        except Exception as e:
+            # 에러 발생 시 디버깅용 텍스트 출력
+            self.send_response(500)
+            self.send_header('Content-type', 'text/plain; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(f"서버 파싱 에러 발생: {str(e)}".encode('utf-8'))
         return
